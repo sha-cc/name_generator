@@ -2,12 +2,13 @@ from json import load
 from pathlib import Path, PosixPath
 from os.path import exists
 from random import randint
+from re import M
 
 class File:
-    PATH = Path("./source")
+    PATH = Path("./names")
     AVAILABLE_REQUESTS = {
-        "first names":   "names/first_names.json",
-        "surnames":      "names/surnames.json"
+        "first names":   "first_names.json",
+        "surnames":      "surnames.json"
     }
 
     def __init__(self, request):
@@ -60,19 +61,38 @@ class Date:
 
     @staticmethod
     def random_year() -> int:
-        year_first_part = randint(19, 20)
+        year_first_part = 19    # randint(19, 20)
         year_last_part = "{:02d}".format(randint(0, 99))
         return int(f"{year_first_part}{year_last_part}")
 
 
-def check_files():
+def phone_number() -> str:
+    number = str(randint(1111111111, 9999999999))
+    return f"+1 ({number[0:3]}) {number[3:6]}-{number[6:11]}"
+
+def check_files() -> None:
     for file in File.all_files():
         if not exists(file):
             raise FileNotFoundError(f"File {file} not found")
 
+MAGENTA = "\033[95m"
+RESET = "\033[0m"
+
 def main():
     check_files()
-    print(Date.full_date())
+
+    name = File("first names").get_value()
+    surname = File("surnames").get_value()
+    birth = Date.full_date()
+    number = phone_number()
+
+    for _ in range(35): print("-", end = "")
+    print(f"\n{MAGENTA} Name: {RESET}{name}")
+    print(f"{MAGENTA} Surname: {RESET}{surname}")
+    print(f"{MAGENTA} Date of birth: {RESET}{birth}")
+    print(f"{MAGENTA} Phone number: {RESET}{number}")
+    for _ in range(35): print("-", end = "")
+    print("\n")
 
 if __name__ == "__main__":
     main()
