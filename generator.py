@@ -2,7 +2,6 @@ from json import load
 from pathlib import Path, PosixPath
 from os.path import exists
 from random import randint
-from re import M
 
 class File:
     PATH = Path("./names")
